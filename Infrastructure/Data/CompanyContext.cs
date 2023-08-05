@@ -12,11 +12,5 @@ namespace Infrastructure.Data
         public DbSet<Company> Companies { get; set; }
         public DbSet<Schedule> Schedules { get; set; }
         public DbSet<Notification> Notifications { get; set; }
-
-        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        // {
-        //    optionsBuilder.UseSqlite("connectionstring");
-        //    base.OnConfiguring(optionsBuilder);
-        // }
     }
 }

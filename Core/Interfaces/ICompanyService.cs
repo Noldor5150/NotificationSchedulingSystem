@@ -1,11 +1,10 @@
-﻿using Core.Entities;
-using Shared.DTOs;
+﻿using Shared.DTOs;
 
 namespace Core.Interfaces
 {
     public interface ICompanyService
     {
-        Task<Company> GetCompanyByIdAsync(Guid id);
         Task<CompanyToReturnDTO> CreateCompanyAsync(AddCompanyDTO company);
+        Task<CompanyToReturnDTO> GetCompanyNotificationsByIdAsync(Guid id);
     }
 }

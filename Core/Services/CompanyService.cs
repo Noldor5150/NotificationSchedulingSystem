@@ -8,6 +8,7 @@ namespace Core.Services
     {
         private readonly ICompanyRepository _repository;
         private readonly IScheduleService _scheduleService;
+
         public CompanyService(ICompanyRepository repository, IScheduleService scheduleService) 
         {
             _repository = repository;
@@ -25,6 +26,7 @@ namespace Core.Services
                 Market = company.Market,
                 Schedule = schedule,
             };
+
             await _repository.CreateCompany(newCompany);
 
             var companyToReturnDTO = new CompanyToReturnDTO
@@ -36,11 +38,22 @@ namespace Core.Services
             return companyToReturnDTO;
         }
 
-        public async Task<Company> GetCompanyByIdAsync(Guid id)
+        public async Task<CompanyToReturnDTO> GetCompanyNotificationsByIdAsync(Guid id)
         {
-            return await _repository.GetCompanyByIdAsync(id);
-        }
+            var company = await _repository.GetCompanyNotificationsByIdAsync(id);
 
-       
+            if (company == null)
+            {
+                return null;
+            }
+
+            var companyToReturnDTO = new CompanyToReturnDTO
+            {
+                CompanyId = company.Id,
+                Notifications = company.Schedule?.Notifications?.Select(n => n.SendingDate.ToString("dd/MM/yyyy")).ToList(),
+            };
+
+            return companyToReturnDTO;
+        }
     }
 }

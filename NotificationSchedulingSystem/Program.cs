@@ -21,6 +21,7 @@ builder.Services.AddDbContext<CompanyContext>(
 builder.Services.AddScoped<ICompanyRepository, CompanyRepository>();
 builder.Services.AddScoped<ICompanyService, CompanyService>();
 builder.Services.AddScoped<IScheduleService, ScheduleService>();
+builder.Services.AddScoped<ICompanyNumberDublicateCheckService, CompanyNumberDublicateCheckService>();
 
 var app = builder.Build();
 

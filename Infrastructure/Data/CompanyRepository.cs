@@ -14,20 +14,20 @@ namespace Infrastructure.Data
             _context = context;
         }
 
+        public async Task<Company> GetCompanyNotificationsByIdAsync(Guid id)
+        {
+            return await _context.Companies.Include(c => c.Schedule).ThenInclude(s => s.Notifications).FirstOrDefaultAsync(c => c.Id == id);
+        }
+
+        public async Task<bool> CheckCompanyNumberlExistsAsync(string companyNumber)
+        {
+            return await _context.Companies.AnyAsync(c => c.CompanyNumber == companyNumber);
+        }
+
         public async Task CreateCompany(Company company)
         {
             await _context.Companies.AddAsync(company);
             await _context.SaveChangesAsync();
-        }
-
-        public async Task<IReadOnlyList<Company>> GetCompaniesAsync()
-        {
-            return await _context.Companies.ToListAsync();
-        }
-
-        public async Task<Company> GetCompanyByIdAsync(Guid id)
-        {
-            return await _context.Companies.FindAsync(id);
         }
     }
 }

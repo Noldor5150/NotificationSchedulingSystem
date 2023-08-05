@@ -4,8 +4,8 @@ namespace Core.Interfaces
 {
     public interface ICompanyRepository
     {
-        Task <Company> GetCompanyByIdAsync(Guid id);
-        Task<IReadOnlyList<Company>> GetCompaniesAsync();
         Task CreateCompany(Company company);
+        Task<bool> CheckCompanyNumberlExistsAsync(string companyNumber);
+        Task<Company> GetCompanyNotificationsByIdAsync(Guid id);
     }
 }

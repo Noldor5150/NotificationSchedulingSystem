@@ -11,6 +11,7 @@ namespace Core.Services
         private readonly int[] norwayNotificationDays = { 1, 5, 10, 20 };
         private readonly int[] swedenNotificationDays = { 1, 7, 14, 28 };
         private readonly int[] finlandNotificationDays = { 1, 5, 10, 15, 20 };
+
         public Schedule CreateSchedule(AddCompanyDTO company)
         {
             if (company == null)

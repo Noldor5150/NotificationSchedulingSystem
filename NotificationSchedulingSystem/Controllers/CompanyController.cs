@@ -1,9 +1,8 @@
-﻿using Core.Entities;
+﻿using API.Errors;
 using Core.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Shared.DTOs;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace API.Controllers
@@ -12,31 +11,44 @@ namespace API.Controllers
     [ApiController]
     public class CompanyController : ControllerBase
     {
-        private readonly ICompanyRepository _repository;
-        private readonly ICompanyService _service;
-        public CompanyController(ICompanyRepository repository, ICompanyService service)
-        {
-            _repository = repository;
-            _service = service;
-        }
+        private readonly ICompanyService _companyService;
+        private readonly ICompanyNumberDublicateCheckService _numberCheckService;
 
-        [HttpGet]
-        public async Task<ActionResult<List<Company>>>  GetCompanies()
+        public CompanyController(ICompanyService companyService, ICompanyNumberDublicateCheckService numberCheckService)
         {
-           var companies = await _repository.GetCompaniesAsync();
-           return Ok(companies);
+            _companyService = companyService;
+            _numberCheckService = numberCheckService;
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Company>> GetCompanyData(Guid id) 
+        public async Task<ActionResult<CompanyToReturnDTO>> GetCompanyNotifications(Guid id)
         {
-            return await _service.GetCompanyByIdAsync(id);
+            var result = await _companyService.GetCompanyNotificationsByIdAsync(id);
+
+            if (result == null)
+            {
+                return BadRequest(new ApiResponse(400));
+            }
+
+            return Ok(result);
         }
 
-        [HttpPost ("{id}")]
+        [HttpPost]
         public async Task<ActionResult<CompanyToReturnDTO>> CreateCompany(AddCompanyDTO company)
         {
-            return await _service.CreateCompanyAsync(company);
+            if (await _numberCheckService.CheckCompanyNumberlExistsAsync(company.CompanyNumber))
+            {
+                return new BadRequestObjectResult(new ApiValidationErrorResponse { Errors = new[] { "Company code in use it is" } });
+            }
+
+            var result = await _companyService.CreateCompanyAsync(company);
+
+            if (result == null)
+            {
+                return BadRequest(new ApiResponse(400));
+            }
+
+            return Ok (result);
         }
      
     }
